@@ -3,6 +3,8 @@
 
 extern void * __sbrk(unsigned long int size);
 extern void * __malloc(unsigned long int size);
+extern void * __free(void * ptr);
+extern void * __memset(void * ptr,unsigned long int size,char c);
 
 extern int create_memory_register(void *reg_ptr,unsigned long int reg_size);
 extern int destroy_memory_register(void *reg_ptr);
@@ -22,7 +24,37 @@ void * __malloc(unsigned long int size)
         return (void *) -1;
     }
 
-    return (void *) memaddr;
+    return (void *) __memset(memaddr,size,'0');
+}
+void * __free(void * ptr)
+{
+    memory_register_t *register_ptr = (memory_register_t *) -1;
+
+    for(unsigned long int index = 0; index <= register_index; index++){
+        if(memory_register[index].ptr == (void *) ptr){
+            register_ptr = (memory_register_t *) &memory_register[index];
+        }
+    }
+
+    if(register_ptr == (memory_register_t *) -1){
+        return (void *) -1;
+    }
+
+    __memset(ptr,register_ptr->size,'0');
+
+    register_ptr->ptr = (void *) -1;
+    register_ptr->size = 0;
+}
+void * __memset(void * ptr,unsigned long int size,char c)
+{
+    unsigned char *ptr_target = (unsigned char *) ptr;
+    unsigned char fill_char = (unsigned char) c;
+
+    for(unsigned long int index = 0; index <= size; index++){
+        ptr_target[index] = fill_char;
+    }
+
+    return (void *) ptr_target;
 }
 
 int create_memory_register(void *ptr_reg,unsigned long int reg_size)

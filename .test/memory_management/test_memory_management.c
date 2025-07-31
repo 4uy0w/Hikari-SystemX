@@ -15,5 +15,7 @@ int main(int argc,char *argv[])
 
     printf("%s \n",test_alloc);
 
+    __free(test_alloc);
+
     return 0;
 }
