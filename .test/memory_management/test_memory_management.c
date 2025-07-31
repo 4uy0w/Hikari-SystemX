@@ -30,6 +30,9 @@ int main(int argc,char *argv[])
         printf("Success to create human with name Sabian! \n");
     }
 
+    printf("Nama manusia 1: %s \n",Aldebaran->name);
+    printf("Nama manusia 2: %s \n",Sabian->name);
+
     destroy_human(Aldebaran);
     destroy_human(Sabian);
 
